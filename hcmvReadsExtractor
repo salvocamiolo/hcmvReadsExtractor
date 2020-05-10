@@ -1,0 +1,71 @@
+#!/usr/bin/python
+from Bio import SeqIO
+import argparse
+import os
+import sys
+
+parser = argparse.ArgumentParser(description="Extract hcmv paired end reads from biological sample sequencing data")
+parser.add_argument("-i","--input_file",required=True, help="Input file containing the path to the reads (one line for each end)")
+parser.add_argument("-db","--kraken_db",required=True, help="The HCMV sequences kraken database")
+parser.add_argument("-t","--threads",required=False,help="Number of threads")
+parser.add_argument("-o","--output_folder",required=True,help="Output folder")
+
+args = vars(parser.parse_args())
+
+inputFileName = args['input_file']
+db = args['kraken_db']
+if not args['threads']:
+    numThreads = 1
+else:
+    numThreads = args['threads']
+outputFolder = args['output_folder']
+
+
+infile = open(inputFileName)
+while True:
+    read1File = infile.readline().rstrip()
+    if not read1:
+        break
+    read2File = infile.readline().rstrip()
+
+    if "fastq" in read1File:
+		prefix1 = ((read1.replace(".fastq","")).split("/"))[-1]
+		prefix2 = ((read2.replace(".fastq","")).split("/"))[-1]
+	if "fq" in read1File:
+		prefix1 = ((read1.replace(".fq","")).split("/"))[-1]
+		prefix2 = ((read2.replace(".fq","")).split("/"))[-1]
+
+    os.system("kraken --db "+db+" --paired "+read1+" "+read2+" --threads "+numThreads+" --fastq-input -o krakenOutput")
+
+    krakenFile = open("krakenOutput")
+
+
+
+
+
+    print "Reading read1"
+    read1 = SeqIO.to_dict(SeqIO.parse(read1File,"fastq"))
+    print "Reading read2"
+    read2 = SeqIO.to_dict(SeqIO.parse(read2File,"fastq"))
+
+    filteredRead1 = open("./"+outputFolder+"/"+prefix1+"_hcmvReads_1.fastq","w")
+    filteredRead2 = open("./"+outputFolder+"/"+prefix1+"_hcmvReads_2.fastq","w")
+
+    includedReads = []
+    readRoot = set()
+    print "Searching HCMV classified reads"
+    while True:
+        line = krakenFile.readline().rstrip()
+        if not line:
+            break
+        fields = line.split("\t")
+        if  fields[2]=="10359":
+            readRoot.add((fields[1].split("/"))[0])
+
+
+
+    print "writing output files"
+    for readName in readRoot:
+        SeqIO.write(read1[readName+"/1"],filteredRead1,"fastq")
+        SeqIO.write(read2[readName+"/2"],filteredRead2,"fastq")
+
