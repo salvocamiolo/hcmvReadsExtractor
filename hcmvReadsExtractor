@@ -81,3 +81,4 @@ while True:
 	infile1.close()
 
 	outfile.write(prefix1+"\t"+str(len(readRoot)*2)+"\t"+str(base1+base2)+"\n")
+	os.system("rm -f krakenOutput")
