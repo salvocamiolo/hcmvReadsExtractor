@@ -75,9 +75,9 @@ while True:
 	print("Calculating number of filtered bases....")
 	os.system("cat ./"+outputFolder+"/"+prefix1+"_hcmvReads_1.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c >baseCount")
 	os.system("cat ./"+outputFolder+"/"+prefix1+"_hcmvReads_2.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c >>baseCount")
-	infile = open("baseCount")
-	base1 = int(infile.readline().rstrip())
-	base2 = int(infile.readline().rstrip())
-	infile.close()
+	infile1 = open("baseCount")
+	base1 = int(infile1.readline().rstrip())
+	base2 = int(infile1.readline().rstrip())
+	infile1.close()
 
 	outfile.write(prefix1+"\t"+str(len(readRoot)*2)+"\t"+str(base1+base2)+"\n")
