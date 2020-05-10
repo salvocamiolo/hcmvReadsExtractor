@@ -35,7 +35,7 @@ while True:
 		prefix1 = ((read1File.replace(".fq","")).split("/"))[-1]
 		prefix2 = ((read2File.replace(".fq","")).split("/"))[-1]
 
-	os.system("kraken --db "+db+" --paired "+read1File+" "+read2File+" --threads "+numThreads+" --fastq-input -o krakenOutput")
+	os.system("kraken --db "+db+" --paired "+read1File+" "+read2File+" --threads "+numThreads+" --fastq-input --output krakenOutput")
 
 	krakenFile = open("krakenOutput")
 
