@@ -69,8 +69,12 @@ while True:
 
 	print "writing output files"
 	for readName in readRoot:
-		SeqIO.write(read1[readName+"/1"],filteredRead1,"fastq")
-		SeqIO.write(read2[readName+"/2"],filteredRead2,"fastq")
+		if readName+"/1" in read1:
+			SeqIO.write(read1[readName+"/1"],filteredRead1,"fastq")
+			SeqIO.write(read2[readName+"/2"],filteredRead2,"fastq")
+		else:
+			SeqIO.write(read1[readName],filteredRead1,"fastq")
+			SeqIO.write(read2[readName],filteredRead2,"fastq")
 
 
 	print("Calculating number of filtered bases....")
