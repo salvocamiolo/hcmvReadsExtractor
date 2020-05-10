@@ -24,7 +24,7 @@ outputFolder = args['output_folder']
 infile = open(inputFileName)
 while True:
 	read1File = infile.readline().rstrip()
-	if not rearead1Filed1:
+	if not read1File:
 		break
 	read2File = infile.readline().rstrip()
 
