@@ -12,6 +12,7 @@ parser.add_argument("-o","--output_folder",required=True,help="Output folder")
 
 args = vars(parser.parse_args())
 
+
 inputFileName = args['input_file']
 db = args['kraken_db']
 if not args['threads']:
@@ -20,7 +21,7 @@ else:
 	numThreads = args['threads']
 outputFolder = args['output_folder']
 
-
+outfile = open("./"+outputFolder+"/summaryStatistics.txt","w")
 infile = open(inputFileName)
 while True:
 	read1File = infile.readline().rstrip()
@@ -35,6 +36,7 @@ while True:
 		prefix1 = ((read1File.replace(".fq","")).split("/"))[-1]
 		prefix2 = ((read2File.replace(".fq","")).split("/"))[-1]
 
+	print("Running kraken on sample %s" %prefix1)
 	os.system("kraken --db "+db+" --paired "+read1File+" "+read2File+" --threads "+numThreads+" --fastq-input --output krakenOutput")
 
 	krakenFile = open("krakenOutput")
@@ -69,3 +71,13 @@ while True:
 		SeqIO.write(read1[readName+"/1"],filteredRead1,"fastq")
 		SeqIO.write(read2[readName+"/2"],filteredRead2,"fastq")
 
+
+	print("Calculating number of filtered bases....")
+	os.system("cat ./"+outputFolder+"/"+prefix1+"_hcmvReads_1.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c >baseCount")
+	os.system("cat ./"+outputFolder+"/"+prefix1+"_hcmvReads_2.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c >>baseCount")
+	infile = open("baseCount")
+	base1 = int(infile.readline().rstrip())
+	base2 = int(infile.readline().rstrip())
+	infile.close()
+
+	outfile.write(prefix1+"\t"+str(len(readRoot)*2)+"\t"+str(base1+base2)+"\n")
