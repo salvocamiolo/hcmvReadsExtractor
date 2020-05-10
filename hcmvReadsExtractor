@@ -24,18 +24,18 @@ outputFolder = args['output_folder']
 infile = open(inputFileName)
 while True:
 	read1File = infile.readline().rstrip()
-	if not read1:
+	if not rearead1Filed1:
 		break
 	read2File = infile.readline().rstrip()
 
 	if "fastq" in read1File:
-		prefix1 = ((read1.replace(".fastq","")).split("/"))[-1]
-		prefix2 = ((read2.replace(".fastq","")).split("/"))[-1]
+		prefix1 = ((read1File.replace(".fastq","")).split("/"))[-1]
+		prefix2 = ((read2File.replace(".fastq","")).split("/"))[-1]
 	if "fq" in read1File:
-		prefix1 = ((read1.replace(".fq","")).split("/"))[-1]
-		prefix2 = ((read2.replace(".fq","")).split("/"))[-1]
+		prefix1 = ((read1File.replace(".fq","")).split("/"))[-1]
+		prefix2 = ((read2File.replace(".fq","")).split("/"))[-1]
 
-	os.system("kraken --db "+db+" --paired "+read1+" "+read2+" --threads "+numThreads+" --fastq-input -o krakenOutput")
+	os.system("kraken --db "+db+" --paired "+read1File+" "+read2File+" --threads "+numThreads+" --fastq-input -o krakenOutput")
 
 	krakenFile = open("krakenOutput")
 
